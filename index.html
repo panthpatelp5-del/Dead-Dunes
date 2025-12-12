@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport"
-        content="width=device-height, height=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+        content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
     <title>Desert Requiem - 3D</title>
     <style>
         body {
@@ -138,7 +138,7 @@
             height: 20px;
             margin: -10px 0 0 -10px;
             pointer-events: none;
-            z-index: 50;
+            z-index: 110;
             background: transparent;
         }
         #crosshair::before,
@@ -311,7 +311,7 @@
             left: 80px;
             width: 130px;
             height: 130px;
-            background: rgba(255, 255, 255, 0.12);
+            background: rgba(255, 255, 255, 0.2);
             border-radius: 50%;
             transform: translate(-50%, -50%);
             pointer-events: auto;
@@ -320,7 +320,7 @@
         #joystickStick {
             width: 60px;
             height: 60px;
-            background: rgba(255, 255, 255, 0.35);
+            background: rgba(255, 255, 255, 0.4);
             border-radius: 50%;
             position: absolute;
             top: 35px;
@@ -336,7 +336,7 @@
             height: 110px;
             border-radius: 50%;
             border: none;
-            background: rgba(255, 255, 255, 0.18);
+            background: rgba(255, 255, 255, 0.25);
             color: white;
             font-size: 24px;
             pointer-events: auto;
@@ -486,7 +486,7 @@
         let isDying = false;
         let rotatedTouchX = 0;
         let rotatedTouchY = 0;
-       
+      
         // Reload sounds
         const snd25 = document.getElementById("reload25");
         const snd50 = document.getElementById("reload50");
@@ -841,7 +841,7 @@
                 reloadCircle.style.borderColor = "rgba(255,255,255,0.15)";
             }
             startCameraShake(0.15, 0.25);
-           
+          
             // Finish reload
             setTimeout(() => {
                 ammo = maxAmmo;
@@ -1498,6 +1498,10 @@
                                 console.log('Orientation lock not supported');
                             });
                         }
+                        // Ensure mobile controls are visible after fullscreen
+                        setTimeout(() => {
+                            document.getElementById("mobileControls").style.display = "block";
+                        }, 100);
                     }).catch((err) => {
                         console.log('Fullscreen request failed:', err);
                         // Fallback: try lock without fullscreen
@@ -1506,6 +1510,10 @@
                                 console.log('Orientation lock not supported');
                             });
                         }
+                        // Ensure mobile controls are visible
+                        setTimeout(() => {
+                            document.getElementById("mobileControls").style.display = "block";
+                        }, 100);
                     });
                 } else {
                     // Fallback for browsers without fullscreen support
@@ -1514,6 +1522,10 @@
                             console.log('Orientation lock not supported');
                         });
                     }
+                    // Ensure mobile controls are visible
+                    setTimeout(() => {
+                        document.getElementById("mobileControls").style.display = "block";
+                    }, 100);
                 }
             } else {
                 controls.lock();
@@ -1555,6 +1567,23 @@
             const volume = volumeSlider.value;
             // If you add sounds, you can control volume here
         };
+        // Additional event listeners for fullscreen and orientation changes to ensure UI visibility
+        document.addEventListener('fullscreenchange', () => {
+            if (document.fullscreenElement && isMobile) {
+                setTimeout(() => {
+                    document.getElementById("mobileControls").style.display = "block";
+                    document.getElementById("crosshair").style.display = "block";
+                }, 100);
+            }
+        });
+        window.addEventListener('orientationchange', () => {
+            setTimeout(() => {
+                if (isMobile) {
+                    document.getElementById("mobileControls").style.display = "block";
+                    document.getElementById("crosshair").style.display = "block";
+                }
+            }, 200);
+        });
     </script>
 </body>
 </html>
