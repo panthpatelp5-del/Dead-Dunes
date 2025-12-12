@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport"
         content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
-    <title>Desert Requiem - 3D</title>
+    <title>Dead Dunes - 3D</title>
     <style>
         body {
             margin: 0;
@@ -342,6 +342,21 @@
             pointer-events: auto;
             touch-action: none;
         }
+        /* Reload Button */
+        #reloadBtn {
+            position: absolute;
+            bottom: 250px;
+            left: 100px;
+            width: 80px;
+            height: 80px;
+            border-radius: 50%;
+            border: none;
+            background: rgba(255, 255, 255, 0.25);
+            color: white;
+            font-size: 16px;
+            pointer-events: auto;
+            touch-action: none;
+        }
     </style>
 </head>
 <body>
@@ -352,10 +367,11 @@
                 <div id="joystickStick"></div>
             </div>
             <button id="sprintBtn">SPRINT</button>
+            <button id="reloadBtn">RELOAD</button>
         </div>
         <!-- MAIN MENU -->
         <div id="mainMenu">
-            <div id="menuTitle">DESERT REQUIEM 3D</div>
+            <div id="menuTitle">DEAD DUNES 3D</div>
             <button class="menuBtn" id="playBtn">PLAY</button>
             <button class="menuBtn" id="instructionsBtn">INSTRUCTIONS</button>
             <button class="menuBtn" id="settingsBtn">SETTINGS</button>
@@ -414,7 +430,7 @@
         <div id="crosshair"></div>
         <div id="reloadCircle"></div>
         <div id="instructions">
-            <div style="font-size:28px; margin-bottom:20px;">Desert Requiem 3D</div>
+            <div style="font-size:28px; margin-bottom:20px;">Dead Dunes 3D</div>
             <div id="startInstructionsText">Click to play<br>
                 WASD/Arrows: Move | Mouse: Look around | Click: Shoot | Shift: Sprint | R: Reload</div>
         </div>
@@ -437,8 +453,8 @@
             document.getElementById("mobileControls").style.display = "block";
             document.body.style.cursor = "auto"; // touch devices don’t hide cursor
             // Update instructions for mobile
-            document.getElementById('instructionsText').innerHTML = 'Joystick: Move<br>Drag screen: Look around<br>Tap screen: Shoot<br>Sprint Button: Sprint<br>R: Reload (if keyboard available)';
-            document.getElementById('startInstructionsText').innerHTML = 'Tap to play<br>Joystick: Move | Drag: Look | Tap: Shoot | Sprint Btn: Sprint | R: Reload';
+            document.getElementById('instructionsText').innerHTML = 'Joystick: Move<br>Drag screen: Look around<br>Tap screen: Shoot<br>Sprint Button: Sprint<br>Reload Button: Reload';
+            document.getElementById('startInstructionsText').innerHTML = 'Tap to play<br>Joystick: Move | Drag: Look | Tap: Shoot | Sprint Btn: Sprint | Reload Btn: Reload';
         }
         import * as THREE from 'three';
         import { PointerLockControls } from 'three/addons/controls/PointerLockControls.js';
@@ -1004,6 +1020,14 @@
             e.stopPropagation();
             mobileSprinting = false;
         }, { passive: false });
+        // Reload Button for Mobile
+        if (isMobile) {
+            document.getElementById("reloadBtn").addEventListener("touchstart", (e) => {
+                e.preventDefault();
+                e.stopPropagation();
+                doReload();
+            }, { passive: false });
+        }
         // Mobile touch controls for look and shoot
         let touchStartX = 0;
         let isLooking = false;
@@ -1019,6 +1043,7 @@
                     // Check if touch is on controls area
                     if (relX < 0.3 && relY > 0.6) return; // Joystick
                     if (relX > 0.7 && relY > 0.6) return; // Sprint
+                    if (relX < 0.3 && relY > 0.3 && relY < 0.5) return; // Reload (approximate position)
                     touchStartX = touch.clientX;
                     isLooking = true;
                     hasMoved = false;
